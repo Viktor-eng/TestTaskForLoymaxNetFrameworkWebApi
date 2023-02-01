@@ -48,8 +48,6 @@ namespace ClientsAccounts.Tests
 
             List<RegisterClientModel> clientAccountsTests = Enumerable.Range(0, 51).Select(x => GenerateUser()).ToList();
 
-            var mock = new Mock<IClient>();
-            var sut = new ControllerServices(mock.Object);
         }
     }
 }
