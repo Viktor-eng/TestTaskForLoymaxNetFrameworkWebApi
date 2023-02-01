@@ -8,7 +8,7 @@ namespace ClientAccount.Controllers
 {
     public class ClientsController : ApiController
     {
-        private ClientDB db = new ClientDB();
+        readonly DBRepository _dbRepository = new DBRepository();
 
         [HttpPost]
         [ActionName("RegisterClient")]
@@ -20,27 +20,19 @@ namespace ClientAccount.Controllers
                 return BadRequest(ModelState);
             }
 
-            Client client = new Client();
-            client.Account = new Account();
+            Client client = new Client
+            {
+                Account = new Account(),
 
-            client.Name = registerClient.Name;
-            client.LastName = registerClient.LastName;
-            client.Patronymic = registerClient.Patronymic;
-            client.BirthDate = registerClient.BirthDate;
+                Name = registerClient.Name,
+                LastName = registerClient.LastName,
+                Patronymic = registerClient.Patronymic,
+                BirthDate = registerClient.BirthDate
+            };
 
-            db.Clients.Add(client);
-            await db.SaveChangesAsync();
+            await _dbRepository.AddOrUpdateClient(client);
 
             return CreatedAtRoute("DefaultApi", new { id = client.Id }, client);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

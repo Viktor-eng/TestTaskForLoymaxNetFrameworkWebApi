@@ -95,9 +95,11 @@
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="DataBase\ClientDB.cs" />
+    <Compile Include="DataBase\DBRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IDBRepository.cs" />
     <Compile Include="Migrations\202301081022508_InitialMigration.cs" />
     <Compile Include="Migrations\202301081022508_InitialMigration.designer.cs">
       <DependentUpon>202301081022508_InitialMigration.cs</DependentUpon>
@@ -114,7 +116,6 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\DepositModel.cs" />
-    <Compile Include="Models\IRegisterClientModel.cs" />
     <Compile Include="Models\RegisterClientModel.cs" />
     <Compile Include="Models\WithdrawModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -10,14 +9,14 @@ namespace ClientAccount.Controllers
 {
     public class AccountsController : ApiController
     {
-        private ClientDB db = new ClientDB();
+        readonly DBRepository _dbRepository = new DBRepository();
 
         [HttpGet]
         [ActionName("GetBalance")]
         [ResponseType(typeof(int))]
         public async Task<IHttpActionResult> GetBalance(int id)
         {
-            Client client = await db.Clients.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id);
+            Client client = await _dbRepository.GetClients(id);
 
             if (client == null)
             {
@@ -36,9 +35,9 @@ namespace ClientAccount.Controllers
                 return BadRequest(ModelState);
             }
 
-            Client client = await db.Clients.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id);
+            Client client = await _dbRepository.GetClients(id);
             client.Account.Balance = client.Account.Balance + model.SumInRubles;
-            await db.SaveChangesAsync();
+            await _dbRepository.AddOrUpdateClient(client);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -52,19 +51,10 @@ namespace ClientAccount.Controllers
                 return BadRequest(ModelState);
             }
 
-            Client client = await db.Clients.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id);
+            Client client = await _dbRepository.GetClients(id);
             client.Account.Balance = client.Account.Balance - model.SumInRubles;
-            await db.SaveChangesAsync();
+            await _dbRepository.AddOrUpdateClient(client);
             return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

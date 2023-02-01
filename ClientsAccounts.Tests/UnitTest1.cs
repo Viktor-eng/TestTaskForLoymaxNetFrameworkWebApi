@@ -1,9 +1,11 @@
 ﻿using ClientAccount.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http.Controllers;
 
 namespace ClientsAccounts.Tests
 {
@@ -45,6 +47,9 @@ namespace ClientsAccounts.Tests
             }
 
             List<RegisterClientModel> clientAccountsTests = Enumerable.Range(0, 51).Select(x => GenerateUser()).ToList();
+
+            var mock = new Mock<IClient>();
+            var sut = new ControllerServices(mock.Object);
         }
     }
 }
