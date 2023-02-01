@@ -36,13 +36,10 @@ namespace ClientAccount.DataBase
             }
         }
 
-        public async Task UpdateClient(Client client)
+        public async Task AddOrUpdateClient(Client client)
         {
             using (var clientDB = new ClientDB())
             {
-                // по ИД пришедшего клиента запросить из БД еще такого же
-                // поменять в клиенте из БД свойства также как и в пришедшем
-                // а потом сохранить 
                 clientDB.Clients.AddOrUpdate(client);
                 await clientDB.SaveChangesAsync();
             }

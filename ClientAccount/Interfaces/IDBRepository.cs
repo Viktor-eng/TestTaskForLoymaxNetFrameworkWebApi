@@ -9,5 +9,7 @@ namespace ClientAccount.Interfaces
         Task<Client> GetClients(int id);
 
         Task<IEnumerable<Account>> GetAccounts();
+
+        Task AddOrUpdateClient(Client client);
     }
 }

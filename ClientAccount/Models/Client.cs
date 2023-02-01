@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClientAccount.Models
 {
-    public class Client : IClient
+    public class Client
     {
         [Key]
         public int Id { get; set; }
