@@ -2,13 +2,21 @@
 using System.Web.Http;
 using System.Web.Http.Description;
 using ClientAccount.DataBase;
+using ClientAccount.Interfaces;
 using ClientAccount.Models;
 
 namespace ClientAccount.Controllers
 {
     public class ClientsController : ApiController
     {
-        readonly DBRepository _dbRepository = new DBRepository();
+        readonly IDBRepository _dbRepository = new DBRepository();
+
+
+        public ClientsController(IDBRepository dbRepository)
+        {
+            _dbRepository = dbRepository;
+        }
+
 
         [HttpPost]
         [ActionName("RegisterClient")]

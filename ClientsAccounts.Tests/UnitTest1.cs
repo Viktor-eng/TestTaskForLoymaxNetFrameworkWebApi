@@ -1,4 +1,5 @@
-﻿using ClientAccount.Interfaces;
+﻿using ClientAccount.Controllers;
+using ClientAccount.Interfaces;
 using ClientAccount.Models;
 using Moq;
 using NUnit.Framework;
@@ -14,10 +15,13 @@ namespace ClientsAccounts.Tests
     {
         private Mock<IDBRepository> _dbRepository;
         private List<Client> clientAccountsTests;
+        
 
         [SetUp]
         public void Setup()
         {
+            System.Diagnostics.Debug.WriteLine("Setup");
+
             _dbRepository = new Mock<IDBRepository>();
             clientAccountsTests = Enumerable.Range(0, 51).Select(x => GenerateUser(x)).ToList();
             _dbRepository.Setup(x => x.GetClients(It.IsAny<int>())).Returns((int x) => Task.FromResult(clientAccountsTests.FirstOrDefault(c => c.Id == x)));
@@ -30,6 +34,31 @@ namespace ClientsAccounts.Tests
 
             Assert.IsNotNull(client);
         }
+
+        [Test]
+        public void TestMethod2()
+        {
+            ClientsController clientsController = new ClientsController(_dbRepository.Object);
+            var clinetModel = clientsController.RegisterClient(new RegisterClientModel() { Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = DateTime.Now });
+
+        }
+
+        [Test]
+        public void TestMethod3()
+        {
+
+            AccountsController accountsController = new AccountsController(_dbRepository.Object);
+            Account account = new Account();
+            
+            DepositModel depositModel= new DepositModel() { SumInRubles= 50 };
+
+            var putDeposit = accountsController.Deposit(1,depositModel);
+
+            var balalance = accountsController.GetBalance(1).Result;
+            Assert.AreEqual(depositModel.SumInRubles, account.Balance);
+            
+        }
+
 
         private Client GenerateUser(int id)
         {
@@ -57,10 +86,9 @@ namespace ClientsAccounts.Tests
 
             int randomValueBirthDate = random.Next(0, birthDates.Length);
             DateTime randomBirthday = birthDates[randomValueBirthDate];
-            Client user = new Client() { Id = id, Name = randomName, LastName = randomLastName, Patronymic = randomPatronymic, BirthDate = randomBirthday };
+            Client user = new Client() { Id = id, Name = randomName, LastName = randomLastName, Patronymic = randomPatronymic, BirthDate = randomBirthday, Account = new Account { ClientId = id, Balance = 0 } };
 
             return user;
         }
-
     }
 }

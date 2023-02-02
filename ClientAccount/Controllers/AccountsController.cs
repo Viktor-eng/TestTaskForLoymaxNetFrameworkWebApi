@@ -13,6 +13,13 @@ namespace ClientAccount.Controllers
     {
         readonly IDBRepository _dbRepository = new DBRepository();
 
+
+        public AccountsController(IDBRepository dbRepository)
+        {
+            _dbRepository = dbRepository;
+        }
+
+
         [HttpGet]
         [ActionName("GetBalance")]
         [ResponseType(typeof(int))]
