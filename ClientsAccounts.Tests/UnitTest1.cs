@@ -55,6 +55,7 @@ namespace ClientsAccounts.Tests
             var putDeposit = accountsController.Deposit(1,depositModel);
 
             var balalance = accountsController.GetBalance(1).Result;
+           
             Assert.AreEqual(depositModel.SumInRubles, account.Balance);
             
         }
