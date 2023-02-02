@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ClientAccount.DataBase;
+using ClientAccount.Interfaces;
 using ClientAccount.Models;
 
 namespace ClientAccount.Controllers
 {
     public class AccountsController : ApiController
     {
-        readonly DBRepository _dbRepository = new DBRepository();
+        readonly IDBRepository _dbRepository = new DBRepository();
 
         [HttpGet]
         [ActionName("GetBalance")]

@@ -96,6 +96,7 @@
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="DataBase\ClientDB.cs" />
     <Compile Include="DataBase\DBRepository.cs" />
+    <Compile Include="Interfaces\IClientDB.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

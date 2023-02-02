@@ -3,7 +3,7 @@ using ClientAccount.Models;
 
 namespace ClientAccount.DataBase
 {
-    public class ClientDB : DbContext
+    public class ClientDB : DbContext, IClientDB
     {
         public ClientDB()
             : base("name=ClientDB")
@@ -11,6 +11,7 @@ namespace ClientAccount.DataBase
             Database.SetInitializer(new CreateDatabaseIfNotExists<ClientDB>());
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ClientDB>());
         }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -9,14 +9,20 @@ namespace ClientAccount.DataBase
 {
     public class DBRepository : IDBRepository
     {
-        //readonly ClientDB _clientDB = new ClientDB();
+        readonly IClientDB _clientDB = new ClientDB();
 
-        /*
-        public DBRepository(ClientDB clientDB)
+        
+        public DBRepository(IClientDB clientDB)
         {
             _clientDB = clientDB;
         }
-        */
+
+
+        public DBRepository()
+        {
+
+        }
+        
 
         public async Task<IEnumerable<Account>> GetAccounts()
         {
