@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace ClientsAccounts.Tests
 {
     
-    public class UnitTest1
+    public class AccountsControllerTests
     {
         private Mock<IDBRepository> _dbRepository;
         private List<Client> clientAccountsTests;
@@ -47,7 +48,7 @@ namespace ClientsAccounts.Tests
         public void TestMethod3()
         {
 
-            AccountsController accountsController = new AccountsController(_dbRepository.Object);
+            ClientAccount.Controllers.AccountsController accountsController = new ClientAccount.Controllers.AccountsController(_dbRepository.Object);
             Account account = new Account();
             
             DepositModel depositModel= new DepositModel() { SumInRubles= 50 };
