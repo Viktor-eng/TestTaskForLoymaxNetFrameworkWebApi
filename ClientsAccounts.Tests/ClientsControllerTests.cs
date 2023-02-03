@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using ClientAccount.Controllers;
 using ClientAccount.Interfaces;
+using System.Web.Http.Results;
 using NSubstitute;
 
 namespace ClientsAccounts.Tests
@@ -20,14 +21,18 @@ namespace ClientsAccounts.Tests
         }
 
         [Test]
-        public void TestMethod1()
+        public async Task TestMethod1()
         {
             ClientsController clientsController = new ClientsController(_dbRepository);
-            Client client = new Client() {Id = 0, Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = DateTime.Now };
-            var clientModelTest = clientsController.RegisterClient(new RegisterClientModel { Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = DateTime.Now });
+            RegisterClientModel reg = new RegisterClientModel() {Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = new DateTime(1989, 05, 14) };
+            var getClientTestModel = await clientsController.RegisterClient(reg);
+            var actualClient = (getClientTestModel as System.Web.Http.Results.CreatedAtRouteNegotiatedContentResult<Client>).Content;
 
-            Assert.AreEqual(client, clientModelTest);
-            
+            Assert.AreEqual(0, actualClient.Id);
+            Assert.AreEqual(reg.Name, actualClient.Name);
+            Assert.AreEqual(reg.Patronymic, actualClient.Patronymic);
+            Assert.AreEqual(reg.BirthDate, actualClient.BirthDate);
+            Assert.AreEqual(reg.LastName, actualClient.LastName);
         }
     }
 }
