@@ -62,6 +62,9 @@ namespace ClientAccount.DataBase
                 oldClient.LastName = newClient.LastName;
                 oldClient.BirthDate = newClient.BirthDate;
                 oldClient.Account = newClient.Account;
+                oldClient.Account.Balance= newClient.Account.Balance;
+                oldClient.Account.ClientId = newClient.Account.ClientId;
+ 
                 await clientDB.SaveChangesAsync();
             }
         }

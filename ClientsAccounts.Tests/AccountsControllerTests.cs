@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Web.Http.Results;
 
 namespace ClientsAccounts.Tests
 {
@@ -50,17 +50,18 @@ namespace ClientsAccounts.Tests
             DepositModel depositModel= new DepositModel() { SumInRubles= 50 };
             WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles= 75 };
 
-            var account1 = accountsController.Deposit(1,depositModel);
-            account1 = accountsController.Deposit(1,depositModel);
-            account1 = accountsController.Deposit(1,depositModel);
-            account1 = accountsController.Deposit(1,depositModel);
-            account1 = accountsController.Withdraw(1, withdrawModel);
+            var account1 =  accountsController.Deposit(1,depositModel);
+            account1 =  accountsController.Deposit(1,depositModel);
+            account1 =  accountsController.Deposit(1,depositModel);
+            account1 =  accountsController.Deposit(1,depositModel);
+            account1 =  accountsController.Withdraw(1, withdrawModel);
 
-            
+            int resultBalance = depositModel.SumInRubles + depositModel.SumInRubles + depositModel.SumInRubles + depositModel.SumInRubles - withdrawModel.SumInRubles;
 
-            var balalance = accountsController.GetBalance(1).Result;
+            var client = await _dbRepository.Object.GetClients(1);
+            int clientBalance = client.Account.Balance;
 
-            Assert.AreEqual(account1 , account.Balance);
+            Assert.AreEqual(resultBalance , clientBalance);
         }
 
 
