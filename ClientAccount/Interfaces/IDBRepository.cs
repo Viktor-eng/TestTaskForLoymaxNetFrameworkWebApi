@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClientAccount.Interfaces
+namespace ClientAccount.DataBase
 {
     public interface IDBRepository
     {
-        Task<Client> GetClients(int id);
+        Task AddClient(Client client);
 
         Task<IEnumerable<Account>> GetAccounts();
 
-        Task AddOrUpdateClient(Client client);
+        Task<Client> GetClients(int id);
+
+        Task UpdateClient(int id, Client newClient);
     }
 }

@@ -2,7 +2,6 @@
 using System.Web.Http;
 using System.Web.Http.Description;
 using ClientAccount.DataBase;
-using ClientAccount.Interfaces;
 using ClientAccount.Models;
 
 namespace ClientAccount.Controllers
@@ -38,7 +37,7 @@ namespace ClientAccount.Controllers
                 BirthDate = registerClient.BirthDate
             };
 
-            await _dbRepository.AddOrUpdateClient(client);
+            await _dbRepository.AddClient(client);
 
             return CreatedAtRoute("DefaultApi", new { id = client.Id }, client);
         }

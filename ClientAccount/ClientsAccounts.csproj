@@ -96,11 +96,11 @@
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="DataBase\ClientDB.cs" />
     <Compile Include="DataBase\DBRepository.cs" />
+    <Compile Include="Interfaces\IDBRepository.cs" />
     <Compile Include="Interfaces\IClientDB.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IDBRepository.cs" />
     <Compile Include="Migrations\202301081022508_InitialMigration.cs" />
     <Compile Include="Migrations\202301081022508_InitialMigration.designer.cs">
       <DependentUpon>202301081022508_InitialMigration.cs</DependentUpon>

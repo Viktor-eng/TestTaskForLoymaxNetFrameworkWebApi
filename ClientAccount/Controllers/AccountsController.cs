@@ -1,10 +1,8 @@
-﻿using System.Data.Entity;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ClientAccount.DataBase;
-using ClientAccount.Interfaces;
 using ClientAccount.Models;
 
 namespace ClientAccount.Controllers
@@ -46,7 +44,7 @@ namespace ClientAccount.Controllers
 
             Client client = await _dbRepository.GetClients(id);
             client.Account.Balance = client.Account.Balance + model.SumInRubles;
-            await _dbRepository.AddOrUpdateClient(client);
+            await _dbRepository.UpdateClient(id, client);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -62,7 +60,7 @@ namespace ClientAccount.Controllers
 
             Client client = await _dbRepository.GetClients(id);
             client.Account.Balance = client.Account.Balance - model.SumInRubles;
-            await _dbRepository.AddOrUpdateClient(client);
+            await _dbRepository.UpdateClient(id ,client);
             return StatusCode(HttpStatusCode.NoContent);
         }
     }

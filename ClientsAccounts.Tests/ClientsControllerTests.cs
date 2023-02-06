@@ -3,9 +3,8 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 using ClientAccount.Controllers;
-using ClientAccount.Interfaces;
-using System.Web.Http.Results;
 using NSubstitute;
+using ClientAccount.DataBase;
 
 namespace ClientsAccounts.Tests
 {
@@ -17,7 +16,7 @@ namespace ClientsAccounts.Tests
         public void SetUp()
         {
             _dbRepository = Substitute.For<IDBRepository>();
-            _dbRepository.AddOrUpdateClient(Arg.Any<Client>()).ReturnsForAnyArgs(Task.FromResult);
+            _dbRepository.AddClient(Arg.Any<Client>()).ReturnsForAnyArgs(Task.FromResult);
         }
 
         [Test]

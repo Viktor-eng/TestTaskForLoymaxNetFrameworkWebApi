@@ -1,8 +1,6 @@
-﻿using ClientAccount.Interfaces;
-using ClientAccount.Models;
+﻿using ClientAccount.Models;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Threading.Tasks;
 
 namespace ClientAccount.DataBase
@@ -11,7 +9,7 @@ namespace ClientAccount.DataBase
     {
         readonly IClientDB _clientDB = new ClientDB();
 
-        
+
         public DBRepository(IClientDB clientDB)
         {
             _clientDB = clientDB;
@@ -22,7 +20,7 @@ namespace ClientAccount.DataBase
         {
 
         }
-        
+
 
         public async Task<IEnumerable<Account>> GetAccounts()
         {
@@ -42,11 +40,28 @@ namespace ClientAccount.DataBase
             }
         }
 
-        public async Task AddOrUpdateClient(Client client)
+        public async Task AddClient(Client client)
         {
             using (var clientDB = new ClientDB())
             {
-                clientDB.Clients.AddOrUpdate(client);
+                clientDB.Clients.Add(client);
+                await clientDB.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateClient(int id, Client newClient)
+        {
+            using (var clientDB = new ClientDB())
+            {
+                var oldClient = await clientDB
+                     .Clients.Include(x => x.Account)
+                     .FirstOrDefaultAsync(x => x.Id == id);
+
+                oldClient.Name = newClient.Name;
+                oldClient.Patronymic = newClient.Patronymic;
+                oldClient.LastName = newClient.LastName;
+                oldClient.BirthDate = newClient.BirthDate;
+                oldClient.Account = newClient.Account;
                 await clientDB.SaveChangesAsync();
             }
         }

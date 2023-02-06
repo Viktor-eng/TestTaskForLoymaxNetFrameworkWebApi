@@ -1,5 +1,5 @@
 ﻿using ClientAccount.Controllers;
-using ClientAccount.Interfaces;
+using ClientAccount.DataBase;
 using ClientAccount.Models;
 using Moq;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ClientsAccounts.Tests
 {
-    
+
     public class AccountsControllerTests
     {
         private Mock<IDBRepository> _dbRepository;
@@ -32,7 +32,6 @@ namespace ClientsAccounts.Tests
         public void TestMethod1()
         {
             var client = _dbRepository.Object.GetClients(5);
-
             Assert.IsNotNull(client);
         }
 
@@ -41,24 +40,27 @@ namespace ClientsAccounts.Tests
         {
             ClientsController clientsController = new ClientsController(_dbRepository.Object);
             var clinetModel = clientsController.RegisterClient(new RegisterClientModel() { Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = DateTime.Now });
-
         }
 
         [Test]
-        public void TestMethod3()
+        public async Task TestMethod3()
         {
-
-            ClientAccount.Controllers.AccountsController accountsController = new ClientAccount.Controllers.AccountsController(_dbRepository.Object);
+            AccountsController accountsController = new AccountsController(_dbRepository.Object);
             Account account = new Account();
-            
             DepositModel depositModel= new DepositModel() { SumInRubles= 50 };
+            WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles= 75 };
 
-            var putDeposit = accountsController.Deposit(1,depositModel);
+            var account1 = accountsController.Deposit(1,depositModel);
+            account1 = accountsController.Deposit(1,depositModel);
+            account1 = accountsController.Deposit(1,depositModel);
+            account1 = accountsController.Deposit(1,depositModel);
+            account1 = accountsController.Withdraw(1, withdrawModel);
+
+            
 
             var balalance = accountsController.GetBalance(1).Result;
-           
-            Assert.AreEqual(depositModel.SumInRubles, account.Balance);
-            
+
+            Assert.AreEqual(account1 , account.Balance);
         }
 
 
