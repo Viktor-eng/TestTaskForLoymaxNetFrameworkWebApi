@@ -57,27 +57,12 @@ namespace ClientsAccounts.Tests
             Task withdraw2 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
             Task withdraw3 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
 
-
-
             var client = await _dbRepository.Object.GetClients(1);
             int clientBalance = client.Account.Balance;
 
             int sumBalance = 125;
 
             Assert.AreEqual(clientBalance, sumBalance);
-
-
-            
-        }
-
-        public void WithdrawClient(int id, int sum)
-        {
-            Thread thr = new Thread(() => {
-                WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles = sum };
-                AccountsController accountsController = new AccountsController(_dbRepository.Object);
-                accountsController.Withdraw(id, withdrawModel);
-            });
-            thr.Start();
         }
 
         public void DepositClient (int id, int sum)
@@ -86,6 +71,16 @@ namespace ClientsAccounts.Tests
                 DepositModel depositModel = new DepositModel() { SumInRubles = sum };
                 AccountsController accountsController = new AccountsController(_dbRepository.Object);
                 accountsController.Deposit(id, depositModel);
+            });
+            thr.Start();
+        }
+
+        public void WithdrawClient(int id, int sum)
+        {
+            Thread thr = new Thread(() => {
+                WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles = sum };
+                AccountsController accountsController = new AccountsController(_dbRepository.Object);
+                accountsController.Withdraw(id, withdrawModel);
             });
             thr.Start();
         }
