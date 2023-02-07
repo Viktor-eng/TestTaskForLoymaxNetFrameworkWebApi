@@ -17,7 +17,7 @@ namespace ClientsAccounts.Tests
     {
         private Mock<IDBRepository> _dbRepository;
         private List<Client> clientAccountsTests;
-        
+
 
         [SetUp]
         public void Setup()
@@ -46,43 +46,57 @@ namespace ClientsAccounts.Tests
         [Test]
         public async Task TestMethod3()
         {
-            Task deposit1 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
-            Task deposit2 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
-            Task deposit3 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
-            Task deposit4 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
-            Task deposit5 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
-            Task deposit6 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
-            Task deposit7 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
-            Task withdraw1 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
-            Task withdraw2 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
-            Task withdraw3 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
+            int value = 10;
+            int sumBalance = 0;
+
+            Task[] tasks = new Task[10];
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                if (i <= 6)
+                {
+                    tasks[i] =  DepositClientAsync(1, value);
+                }
+
+                else
+                {
+                    tasks[i] = WithdrawClientAsync(1, value);
+                }
+            }
+
+            Task.WhenAll(tasks).Wait();
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                if (i <= 6)
+                {
+                    sumBalance += value;
+                }
+
+                else
+                {
+                    sumBalance -= value;
+                }
+            }
 
             var client = await _dbRepository.Object.GetClients(1);
             int clientBalance = client.Account.Balance;
 
-            int sumBalance = 125;
-
             Assert.AreEqual(clientBalance, sumBalance);
         }
 
-        public void DepositClient (int id, int sum)
+        public async Task DepositClientAsync(int id, int value)
         {
-            Thread thr = new Thread(() => { 
-                DepositModel depositModel = new DepositModel() { SumInRubles = sum };
-                AccountsController accountsController = new AccountsController(_dbRepository.Object);
-                accountsController.Deposit(id, depositModel);
-            });
-            thr.Start();
+            DepositModel depositModel = new DepositModel() { SumInRubles = value };
+            AccountsController accountsController = new AccountsController(_dbRepository.Object);
+            await accountsController.Deposit(id, depositModel);
         }
 
-        public void WithdrawClient(int id, int sum)
+        public async Task WithdrawClientAsync(int id, int value)
         {
-            Thread thr = new Thread(() => {
-                WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles = sum };
-                AccountsController accountsController = new AccountsController(_dbRepository.Object);
-                accountsController.Withdraw(id, withdrawModel);
-            });
-            thr.Start();
+            WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles = value };
+            AccountsController accountsController = new AccountsController(_dbRepository.Object);
+            await accountsController.Withdraw(id, withdrawModel);
         }
 
         private Client GenerateUser(int id)
