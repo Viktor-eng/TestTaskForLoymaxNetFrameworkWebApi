@@ -20,7 +20,7 @@ namespace ClientAccount.Controllers
         [HttpPost]
         [ActionName("RegisterClient")]
         [ResponseType(typeof(Client))]
-        public async Task<IHttpActionResult> RegisterClient([FromBody]RegisterClientModel registerClient)
+        public async Task<IHttpActionResult> RegisterClient([FromBody] RegisterClientModel registerClient)
         {
             if (!ModelState.IsValid)
             {

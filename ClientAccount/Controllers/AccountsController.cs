@@ -35,7 +35,7 @@ namespace ClientAccount.Controllers
         [HttpPost]
         [ActionName("Deposit")]
         [ResponseType(typeof(Account))]
-        public async Task<IHttpActionResult> Deposit(int id, [FromBody]DepositModel model)
+        public async Task<IHttpActionResult> Deposit(int id, [FromBody] DepositModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace ClientAccount.Controllers
         [HttpPost]
         [ActionName("Withdraw")]
         [ResponseType(typeof(Account))]
-        public async Task<IHttpActionResult> Withdraw(int id, [FromBody]WithdrawModel model)
+        public async Task<IHttpActionResult> Withdraw(int id, [FromBody] WithdrawModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace ClientAccount.Controllers
 
             Client client = await _dbRepository.GetClients(id);
             client.Account.Balance = client.Account.Balance - model.SumInRubles;
-            await _dbRepository.UpdateClient(id ,client);
+            await _dbRepository.UpdateClient(id, client);
             return StatusCode(HttpStatusCode.NoContent);
         }
     }

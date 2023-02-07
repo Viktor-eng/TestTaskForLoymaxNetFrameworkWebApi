@@ -60,7 +60,7 @@ namespace ClientsAccounts.Tests
         public Task DepositClientAsync(int id, int value)
         {
             DepositModel depositModel = new DepositModel() { SumInRubles = value };
-             return _accountsController.Deposit(id, depositModel);
+            return _accountsController.Deposit(id, depositModel);
         }
 
         public Task WithdrawClientAsync(int id, int value)
