@@ -6,6 +6,8 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClientsAccounts.Tests
@@ -44,25 +46,49 @@ namespace ClientsAccounts.Tests
         [Test]
         public async Task TestMethod3()
         {
-            AccountsController accountsController = new AccountsController(_dbRepository.Object);
-            Account account = new Account();
-            DepositModel depositModel= new DepositModel() { SumInRubles= 50 };
-            WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles= 75 };
+            Task deposit1 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
+            Task deposit2 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
+            Task deposit3 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
+            Task deposit4 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
+            Task deposit5 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
+            Task deposit6 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
+            Task deposit7 = Task.Factory.StartNew(() => { DepositClient(1, 50); });
+            Task withdraw1 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
+            Task withdraw2 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
+            Task withdraw3 = Task.Factory.StartNew(() => { WithdrawClient(1, 75); });
 
-            var account1 =  accountsController.Deposit(1,depositModel);
-            account1 =  accountsController.Deposit(1,depositModel);
-            account1 =  accountsController.Deposit(1,depositModel);
-            account1 =  accountsController.Deposit(1,depositModel);
-            account1 =  accountsController.Withdraw(1, withdrawModel);
 
-            int resultBalance = depositModel.SumInRubles + depositModel.SumInRubles + depositModel.SumInRubles + depositModel.SumInRubles - withdrawModel.SumInRubles;
 
             var client = await _dbRepository.Object.GetClients(1);
             int clientBalance = client.Account.Balance;
 
-            Assert.AreEqual(resultBalance , clientBalance);
+            int sumBalance = 125;
+
+            Assert.AreEqual(clientBalance, sumBalance);
+
+
+            
         }
 
+        public void WithdrawClient(int id, int sum)
+        {
+            Thread thr = new Thread(() => {
+                WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles = sum };
+                AccountsController accountsController = new AccountsController(_dbRepository.Object);
+                accountsController.Withdraw(id, withdrawModel);
+            });
+            thr.Start();
+        }
+
+        public void DepositClient (int id, int sum)
+        {
+            Thread thr = new Thread(() => { 
+                DepositModel depositModel = new DepositModel() { SumInRubles = sum };
+                AccountsController accountsController = new AccountsController(_dbRepository.Object);
+                accountsController.Deposit(id, depositModel);
+            });
+            thr.Start();
+        }
 
         private Client GenerateUser(int id)
         {
