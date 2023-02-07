@@ -20,10 +20,10 @@ namespace ClientsAccounts.Tests
         }
 
         [Test]
-        public async Task TestMethod1()
+        public async Task RegisterClientControllerTest()
         {
             ClientsController clientsController = new ClientsController(_dbRepository);
-            RegisterClientModel reg = new RegisterClientModel() {Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = new DateTime(1989, 05, 14) };
+            RegisterClientModel reg = new RegisterClientModel() { Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = new DateTime(1989, 05, 14) };
             var getClientTestModel = await clientsController.RegisterClient(reg);
             var actualClient = (getClientTestModel as System.Web.Http.Results.CreatedAtRouteNegotiatedContentResult<Client>).Content;
 

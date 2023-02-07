@@ -16,10 +16,7 @@ namespace ClientAccount.DataBase
         }
 
 
-        public DBRepository()
-        {
-
-        }
+        public DBRepository() { }
 
 
         public async Task<IEnumerable<Account>> GetAccounts()

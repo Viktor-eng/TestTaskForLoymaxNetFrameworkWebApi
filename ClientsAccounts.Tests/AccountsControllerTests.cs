@@ -6,97 +6,67 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClientsAccounts.Tests
 {
-
     public class AccountsControllerTests
     {
         private Mock<IDBRepository> _dbRepository;
-        private List<Client> clientAccountsTests;
-
+        private List<Client> _clientAccountsTests;
+        private AccountsController _accountsController;
 
         [SetUp]
         public void Setup()
         {
-            System.Diagnostics.Debug.WriteLine("Setup");
-
             _dbRepository = new Mock<IDBRepository>();
-            clientAccountsTests = Enumerable.Range(0, 51).Select(x => GenerateUser(x)).ToList();
-            _dbRepository.Setup(x => x.GetClients(It.IsAny<int>())).Returns((int x) => Task.FromResult(clientAccountsTests.FirstOrDefault(c => c.Id == x)));
+            _clientAccountsTests = Enumerable.Range(0, 51).Select(x => GenerateUser(x)).ToList();
+            _dbRepository.Setup(x => x.GetClients(It.IsAny<int>())).Returns((int x) => Task.FromResult(_clientAccountsTests.FirstOrDefault(c => c.Id == x)));
+            _accountsController = new AccountsController(_dbRepository.Object);
         }
 
         [Test]
-        public void TestMethod1()
+        public void IsNotNullDataBaseMoqTest()
         {
             var client = _dbRepository.Object.GetClients(5);
             Assert.IsNotNull(client);
         }
 
         [Test]
-        public void TestMethod2()
-        {
-            ClientsController clientsController = new ClientsController(_dbRepository.Object);
-            var clinetModel = clientsController.RegisterClient(new RegisterClientModel() { Name = "Viktor", Patronymic = "Leonidovich", LastName = "Beliankin", BirthDate = DateTime.Now });
-        }
-
-        [Test]
-        public async Task TestMethod3()
+        public async Task DepositAndWithdrawInThreadTest()
         {
             int value = 10;
-            int sumBalance = 0;
 
             Task[] tasks = new Task[10];
 
             for (int i = 0; i < tasks.Length; i++)
             {
-                if (i <= 6)
-                {
-                    tasks[i] =  DepositClientAsync(1, value);
-                }
+                tasks[i] = DepositClientAsync(1, value);
+            }
 
-                else
-                {
-                    tasks[i] = WithdrawClientAsync(1, value);
-                }
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                tasks[i] = WithdrawClientAsync(1, value);
             }
 
             Task.WhenAll(tasks).Wait();
 
-            for (int i = 0; i < tasks.Length; i++)
-            {
-                if (i <= 6)
-                {
-                    sumBalance += value;
-                }
-
-                else
-                {
-                    sumBalance -= value;
-                }
-            }
-
             var client = await _dbRepository.Object.GetClients(1);
             int clientBalance = client.Account.Balance;
 
-            Assert.AreEqual(clientBalance, sumBalance);
+            Assert.AreEqual(clientBalance, 0);
         }
 
-        public async Task DepositClientAsync(int id, int value)
+        public Task DepositClientAsync(int id, int value)
         {
             DepositModel depositModel = new DepositModel() { SumInRubles = value };
-            AccountsController accountsController = new AccountsController(_dbRepository.Object);
-            await accountsController.Deposit(id, depositModel);
+             return _accountsController.Deposit(id, depositModel);
         }
 
-        public async Task WithdrawClientAsync(int id, int value)
+        public Task WithdrawClientAsync(int id, int value)
         {
             WithdrawModel withdrawModel = new WithdrawModel() { SumInRubles = value };
-            AccountsController accountsController = new AccountsController(_dbRepository.Object);
-            await accountsController.Withdraw(id, withdrawModel);
+            return _accountsController.Withdraw(id, withdrawModel);
         }
 
         private Client GenerateUser(int id)
